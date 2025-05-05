@@ -44,6 +44,7 @@
             ajouterToolStripMenuItem = new ToolStripMenuItem();
             supprimerToolStripMenuItem = new ToolStripMenuItem();
             pictureBox1 = new PictureBox();
+            btn_deco = new Button();
             MenuUser1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -155,11 +156,23 @@
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
+            // btn_deco
+            // 
+            btn_deco.BackColor = Color.IndianRed;
+            btn_deco.Location = new Point(26, 462);
+            btn_deco.Name = "btn_deco";
+            btn_deco.Size = new Size(92, 23);
+            btn_deco.TabIndex = 2;
+            btn_deco.Text = "Déconnexion";
+            btn_deco.UseVisualStyleBackColor = false;
+            btn_deco.Click += button1_Click;
+            // 
             // Fmenu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(907, 505);
+            Controls.Add(btn_deco);
             Controls.Add(pictureBox1);
             Controls.Add(MenuUser1);
             MainMenuStrip = MenuUser1;
@@ -190,5 +203,6 @@
         private ToolStripMenuItem gestionToolStripMenuItem;
         private ToolStripMenuItem ajouterToolStripMenuItem;
         private ToolStripMenuItem supprimerToolStripMenuItem;
+        private Button btn_deco;
     }
 }

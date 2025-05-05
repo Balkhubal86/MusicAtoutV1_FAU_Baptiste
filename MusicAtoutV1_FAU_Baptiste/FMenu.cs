@@ -59,11 +59,24 @@ namespace MusicAtoutV1_FAU_Baptiste
 
         private void Fmenu_Load(object sender, EventArgs e)
         {
-            if(ModelProjet.UtilisateurConnecte.Droits == 3)
+            if (ModelProjet.UtilisateurConnecte.Droits == 3)
             {
 
             }
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+
+            Thread t = new Thread(() =>
+            {
+                Application.Run(new FConnexion());
+            });
+
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
         }
     }
 }
