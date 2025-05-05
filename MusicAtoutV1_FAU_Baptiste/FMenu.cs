@@ -59,9 +59,13 @@ namespace MusicAtoutV1_FAU_Baptiste
 
         private void Fmenu_Load(object sender, EventArgs e)
         {
-            if (ModelProjet.UtilisateurConnecte.Droits != 3)
+            if (ModelProjet.UtilisateurConnecte.Droits == 3)
             {
-
+                gestionToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                gestionToolStripMenuItem.Visible = false;
             }
 
         }
@@ -83,6 +87,12 @@ namespace MusicAtoutV1_FAU_Baptiste
         {
             FChangementMdp fChangementMdp = new FChangementMdp();
             fChangementMdp.ShowDialog();
+        }
+
+        private void gestionToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            FGestionUtilisateurs fGestionUtilisateurs = new FGestionUtilisateurs();
+            fGestionUtilisateurs.ShowDialog();
         }
     }
 }

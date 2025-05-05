@@ -69,6 +69,10 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return monModel.Oeuvres.ToList();
         }
 
+        public static List<Utilisateur> listeUtilisateur()
+        {
+            return monModel.Utilisateurs.ToList();
+        }
         public static Compositeur compositeurAPartirDeLId(int id)
         {
             Compositeur vretour = null;
@@ -209,5 +213,53 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return connexionValide;
         }
 
+        public static void ChangeMdp(string ancien, string nouveau, string confirmation)
+        {
+            string message = "";
+            string hashAncien = GetMd5Hash(ancien);
+            string hashNouveau = GetMd5Hash(nouveau);
+
+            if (nouveau != confirmation)
+            {
+                message = "Les mots de passe ne correspondent pas.";
+            }
+            else if (utilisateurConnecte.Passwd.Substring(2) != hashAncien)
+            {
+                message = "Ancien mot de passe incorrect.";
+            }
+            else if (!MotDePasseValide(nouveau))
+            {
+                message = "Le mot de passe ne respecte pas les règles.";
+            }
+            else
+            {
+                // Mise à jour du mot de passe
+                utilisateurConnecte.Passwd = hashNouveau;
+
+                using (var db = new Sio2musicAtoutFauContext())
+                {
+                    var user = db.Utilisateurs.FirstOrDefault(u => u.IdUtilisateur == utilisateurConnecte.IdUtilisateur);
+                    if (user != null)
+                    {
+                        user.Passwd = hashNouveau;
+                        db.SaveChanges();
+                    }
+                }
+
+                message = "Mot de passe modifié avec succès !";
+            }
+
+            MessageBox.Show(message);
+        }
+
+        public static bool MotDePasseValide(string mdp)
+        {
+            string special = @"()[]{}@ !$,;:/";
+            bool estValide = mdp.Length >= 8
+                             && mdp.Any(char.IsDigit)
+                             && mdp.Any(c => special.Contains(c));
+
+            return estValide;
+        }
     }
 }

@@ -134,6 +134,7 @@
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
             gestionToolStripMenuItem.Size = new Size(180, 22);
             gestionToolStripMenuItem.Text = "Gestion";
+            gestionToolStripMenuItem.Click += gestionToolStripMenuItem_Click_1;
             // 
             // ajouterToolStripMenuItem
             // 
