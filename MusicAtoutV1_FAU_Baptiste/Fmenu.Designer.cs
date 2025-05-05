@@ -43,6 +43,7 @@
             gestionToolStripMenuItem = new ToolStripMenuItem();
             ajouterToolStripMenuItem = new ToolStripMenuItem();
             supprimerToolStripMenuItem = new ToolStripMenuItem();
+            changementMdpToolStripMenuItem = new ToolStripMenuItem();
             pictureBox1 = new PictureBox();
             btn_deco = new Button();
             MenuUser1.SuspendLayout();
@@ -123,7 +124,7 @@
             // 
             // utilisateursToolStripMenuItem
             // 
-            utilisateursToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gestionToolStripMenuItem, ajouterToolStripMenuItem, supprimerToolStripMenuItem });
+            utilisateursToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gestionToolStripMenuItem, ajouterToolStripMenuItem, supprimerToolStripMenuItem, changementMdpToolStripMenuItem });
             utilisateursToolStripMenuItem.Name = "utilisateursToolStripMenuItem";
             utilisateursToolStripMenuItem.Size = new Size(77, 20);
             utilisateursToolStripMenuItem.Text = "Utilisateurs";
@@ -131,20 +132,27 @@
             // gestionToolStripMenuItem
             // 
             gestionToolStripMenuItem.Name = "gestionToolStripMenuItem";
-            gestionToolStripMenuItem.Size = new Size(129, 22);
+            gestionToolStripMenuItem.Size = new Size(180, 22);
             gestionToolStripMenuItem.Text = "Gestion";
             // 
             // ajouterToolStripMenuItem
             // 
             ajouterToolStripMenuItem.Name = "ajouterToolStripMenuItem";
-            ajouterToolStripMenuItem.Size = new Size(129, 22);
+            ajouterToolStripMenuItem.Size = new Size(180, 22);
             ajouterToolStripMenuItem.Text = "Ajouter";
             // 
             // supprimerToolStripMenuItem
             // 
             supprimerToolStripMenuItem.Name = "supprimerToolStripMenuItem";
-            supprimerToolStripMenuItem.Size = new Size(129, 22);
+            supprimerToolStripMenuItem.Size = new Size(180, 22);
             supprimerToolStripMenuItem.Text = "Supprimer";
+            // 
+            // changementMdpToolStripMenuItem
+            // 
+            changementMdpToolStripMenuItem.Name = "changementMdpToolStripMenuItem";
+            changementMdpToolStripMenuItem.Size = new Size(180, 22);
+            changementMdpToolStripMenuItem.Text = "Changement mdp";
+            changementMdpToolStripMenuItem.Click += changementMdpToolStripMenuItem_Click;
             // 
             // pictureBox1
             // 
@@ -204,5 +212,6 @@
         private ToolStripMenuItem ajouterToolStripMenuItem;
         private ToolStripMenuItem supprimerToolStripMenuItem;
         private Button btn_deco;
+        private ToolStripMenuItem changementMdpToolStripMenuItem;
     }
 }

@@ -59,7 +59,7 @@ namespace MusicAtoutV1_FAU_Baptiste
 
         private void Fmenu_Load(object sender, EventArgs e)
         {
-            if (ModelProjet.UtilisateurConnecte.Droits == 3)
+            if (ModelProjet.UtilisateurConnecte.Droits != 3)
             {
 
             }
@@ -77,6 +77,12 @@ namespace MusicAtoutV1_FAU_Baptiste
 
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
+        }
+
+        private void changementMdpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FChangementMdp fChangementMdp = new FChangementMdp();
+            fChangementMdp.ShowDialog();
         }
     }
 }
