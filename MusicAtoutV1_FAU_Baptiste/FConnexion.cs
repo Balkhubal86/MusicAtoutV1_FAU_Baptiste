@@ -32,7 +32,7 @@ namespace MusicAtoutV1_FAU_Baptiste
 
         private void btConnexion_Click(object sender, EventArgs e)
         {
-            if(ModelProjet.validConnexion(tbLogin.Text, tbPassword.Text))
+            if (ModelProjet.validConnexion(tbLogin.Text, tbPassword.Text))
             {
                 System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(ThreadProc));
                 t.Start();

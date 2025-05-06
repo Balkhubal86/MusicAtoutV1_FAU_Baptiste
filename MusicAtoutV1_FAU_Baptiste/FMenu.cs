@@ -59,7 +59,7 @@ namespace MusicAtoutV1_FAU_Baptiste
 
         private void Fmenu_Load(object sender, EventArgs e)
         {
-            if (ModelProjet.UtilisateurConnecte.Droits == 3)
+            if (ModelProjet.UtilisateurConnecte.Droits >= 2)
             {
                 gestionToolStripMenuItem.Visible = true;
             }

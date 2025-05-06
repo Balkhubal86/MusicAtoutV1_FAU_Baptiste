@@ -25,7 +25,11 @@ namespace MusicAtoutV1_FAU_Baptiste
             string nouveau = tbNouveauMdp.Text;
             string confirmation = tbConfirmMdp.Text;
 
-            ModelProjet.ChangeMdp(ancien, nouveau, confirmation);
+            if (ModelProjet.ChangeMdp(ancien, nouveau, confirmation))
+            {
+                MessageBox.Show("Mot de passe modifié avec succès !");
+                this.Close();
+            }
         }
 
 

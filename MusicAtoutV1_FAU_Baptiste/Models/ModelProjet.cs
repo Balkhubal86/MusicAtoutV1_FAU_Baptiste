@@ -16,8 +16,6 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
         private static Compositeur compositeurChoisi;
         private static Utilisateur utilisateurConnecte;
         private static bool connexionValide;
-        private static bool newUser;
-
 
         public static Sio2musicAtoutFauContext MonModel { get => monModel; set => monModel = value; }
         public static int ActionGestionCompositeur { get => actionGestionCompositeur; set => actionGestionCompositeur = value; }
@@ -151,6 +149,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return sb.ToString();
         }
 
+        // Section Mot de Passe 
         public static bool validConnexion(string id, string mp)
         {
             string message = "";
@@ -162,11 +161,13 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
 
                 if (utilisateurConnecte.Nbessais == 4) 
                 {
-                    if (utilisateurConnecte.IdUtilisateur.Substring(2).Equals(GetMd5Hash(mp)))
+                    if (utilisateurConnecte.Passwd.Substring(2).Equals(GetMd5Hash(mp)))
                     {
                         connexionValide = true;
                         utilisateurConnecte.Nbessais = 0;
-                        newUser = true;
+
+                        FChangementMdp fChangementMdp = new FChangementMdp();
+                        fChangementMdp.ShowDialog();
                     }
                 }
 
@@ -213,7 +214,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return connexionValide;
         }
 
-        public static void ChangeMdp(string ancien, string nouveau, string confirmation)
+        public static bool ChangeMdp(string ancien, string nouveau, string confirmation)
         {
             string message = "";
             string hashAncien = GetMd5Hash(ancien);
@@ -223,7 +224,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             {
                 message = "Les mots de passe ne correspondent pas.";
             }
-            else if (utilisateurConnecte.Passwd.Substring(2) != hashAncien)
+            else if (utilisateurConnecte.Passwd.Substring(2) != "0x" + hashAncien)
             {
                 message = "Ancien mot de passe incorrect.";
             }
@@ -233,7 +234,6 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             }
             else
             {
-                // Mise à jour du mot de passe
                 utilisateurConnecte.Passwd = hashNouveau;
 
                 using (var db = new Sio2musicAtoutFauContext())
@@ -241,15 +241,16 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
                     var user = db.Utilisateurs.FirstOrDefault(u => u.IdUtilisateur == utilisateurConnecte.IdUtilisateur);
                     if (user != null)
                     {
-                        user.Passwd = hashNouveau;
+                        user.Passwd = "0x" + hashNouveau;
                         db.SaveChanges();
                     }
                 }
 
-                message = "Mot de passe modifié avec succès !";
+                return true; // Succès
             }
 
             MessageBox.Show(message);
+            return false;
         }
 
         public static bool MotDePasseValide(string mdp)
@@ -261,5 +262,88 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
 
             return estValide;
         }
+
+        //
+
+        // Gestion Utilisateurs
+        public static void ReactiverUtilisateur(Utilisateur uChoisi)
+        {
+            if (UtilisateurConnecte.Droits >= 2 && UtilisateurConnecte.Droits >= uChoisi.Droits)
+            {
+                uChoisi.Actif = true;
+                uChoisi.Nbessais = 4;
+                uChoisi.Passwd = GetMd5Hash(uChoisi.IdUtilisateur); // Le mot de passe temporaire = identifiant
+                MessageBox.Show($"Compte {uChoisi.IdUtilisateur} réactivé !");
+            }
+            else
+            {
+                MessageBox.Show("Vous n'avez pas les droits pour réactiver ce compte.");
+            }
+        }
+
+        public static void DesactiverUtilisateur(Utilisateur uChoisi)
+        {
+            if (UtilisateurConnecte.Droits == 3)
+            {
+                uChoisi.Actif = false;
+                uChoisi.Nbessais = 4;
+                MessageBox.Show($"Compte {uChoisi.IdUtilisateur} désactivé !");
+            }
+            else
+            {
+                MessageBox.Show("Droits insuffisants pour désactiver un utilisateur.");
+            }
+        }
+
+        public static bool AjouterUtilisateur(string id, int droits, string mdp)
+        {
+            bool vretour = true;
+            try
+            {
+                // Vérifie que l'identifiant est unique
+                if (monModel.Utilisateurs.Any(u => u.IdUtilisateur == id))
+                {
+                    MessageBox.Show("Cet identifiant existe déjà.");
+                    vretour = false;
+                }
+
+                // Varifie que le mdp est valide
+                if (!MotDePasseValide(mdp))
+                {
+                    MessageBox.Show("Mot de passe invalide.");
+                    vretour = false;
+                }
+
+                //
+                if (UtilisateurConnecte.Droits == 3 && vretour)
+                {
+                    Utilisateur newUser = new Utilisateur
+                    {
+                        IdUtilisateur = id,
+                        Droits = droits,
+                        Actif = true,
+                        Nbessais = 4,
+                        Passwd = "0x" + GetMd5Hash(mdp)
+                    };
+
+                    monModel.Utilisateurs.Add(newUser);
+                    monModel.SaveChanges();
+                    MessageBox.Show($"Utilisateur {id} ajouté avec succès.");
+                }
+                else
+                {
+                    MessageBox.Show("Vous n'avez pas les droits pour créer un utilisateur.");
+                    vretour = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur lors de l'ajout de l'utilisateur : " + ex.Message);
+                vretour = false;
+            }
+
+            return vretour;
+        }
+
     }
 }

@@ -37,9 +37,39 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
 
         private void bindingSource1_CurrentChanged(object sender, EventArgs e)
         {
-            
+
         }
 
-        
+        private void btnReactivation_Click(object sender, EventArgs e)
+        {
+            if (bsUtilisateurs.Current is Utilisateur uChoisi)
+            {
+                ModelProjet.ReactiverUtilisateur(uChoisi);
+                dgvUtilisateurs.Refresh();
+            }
+        }
+
+        private void btnDesactivation_Click(object sender, EventArgs e)
+        {
+            if (bsUtilisateurs.Current is Utilisateur uChoisi)
+            {
+                ModelProjet.DesactiverUtilisateur(uChoisi);
+                dgvUtilisateurs.Refresh();
+            }
+        }
+
+        private void btnAjout_Click(object sender, EventArgs e)
+        {
+            if (ModelProjet.UtilisateurConnecte.Droits != 3)
+            {
+                MessageBox.Show("Vous n'avez pas les droits pour créer un utilisateur.");
+                return;
+            }
+            else
+            {
+                FAjoutUtilisateur fAjout = new FAjoutUtilisateur();
+                fAjout.ShowDialog();
+            }
+        }
     }
 }

@@ -32,7 +32,9 @@
             label1 = new Label();
             dgvUtilisateurs = new DataGridView();
             bsUtilisateurs = new BindingSource(components);
-            btnSauvegarde = new Button();
+            btnReactivation = new Button();
+            btnDesactivation = new Button();
+            btnAjout = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvUtilisateurs).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bsUtilisateurs).BeginInit();
             SuspendLayout();
@@ -48,9 +50,12 @@
             // 
             // dgvUtilisateurs
             // 
+            dgvUtilisateurs.AllowUserToAddRows = false;
+            dgvUtilisateurs.AllowUserToDeleteRows = false;
             dgvUtilisateurs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvUtilisateurs.Location = new Point(12, 37);
             dgvUtilisateurs.Name = "dgvUtilisateurs";
+            dgvUtilisateurs.ReadOnly = true;
             dgvUtilisateurs.Size = new Size(1021, 484);
             dgvUtilisateurs.TabIndex = 1;
             dgvUtilisateurs.CellContentClick += dgvUtilisateurs_CellContentClick;
@@ -59,21 +64,44 @@
             // 
             bsUtilisateurs.CurrentChanged += bindingSource1_CurrentChanged;
             // 
-            // btnSauvegarde
+            // btnReactivation
             // 
-            btnSauvegarde.Location = new Point(947, 542);
-            btnSauvegarde.Name = "btnSauvegarde";
-            btnSauvegarde.Size = new Size(86, 23);
-            btnSauvegarde.TabIndex = 2;
-            btnSauvegarde.Text = "Sauvegarder";
-            btnSauvegarde.UseVisualStyleBackColor = true;
+            btnReactivation.Location = new Point(12, 542);
+            btnReactivation.Name = "btnReactivation";
+            btnReactivation.Size = new Size(75, 23);
+            btnReactivation.TabIndex = 3;
+            btnReactivation.Text = "Réactiver";
+            btnReactivation.UseVisualStyleBackColor = true;
+            btnReactivation.Click += btnReactivation_Click;
+            // 
+            // btnDesactivation
+            // 
+            btnDesactivation.Location = new Point(109, 542);
+            btnDesactivation.Name = "btnDesactivation";
+            btnDesactivation.Size = new Size(75, 23);
+            btnDesactivation.TabIndex = 4;
+            btnDesactivation.Text = "Désactiver";
+            btnDesactivation.UseVisualStyleBackColor = true;
+            btnDesactivation.Click += btnDesactivation_Click;
+            // 
+            // btnAjout
+            // 
+            btnAjout.Location = new Point(206, 542);
+            btnAjout.Name = "btnAjout";
+            btnAjout.Size = new Size(75, 23);
+            btnAjout.TabIndex = 5;
+            btnAjout.Text = "Ajouter";
+            btnAjout.UseVisualStyleBackColor = true;
+            btnAjout.Click += btnAjout_Click;
             // 
             // FGestionUtilisateurs
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1045, 577);
-            Controls.Add(btnSauvegarde);
+            Controls.Add(btnAjout);
+            Controls.Add(btnDesactivation);
+            Controls.Add(btnReactivation);
             Controls.Add(dgvUtilisateurs);
             Controls.Add(label1);
             Name = "FGestionUtilisateurs";
@@ -90,6 +118,8 @@
         private Label label1;
         private DataGridView dgvUtilisateurs;
         private BindingSource bsUtilisateurs;
-        private Button btnSauvegarde;
+        private Button btnReactivation;
+        private Button btnDesactivation;
+        private Button btnAjout;
     }
 }
