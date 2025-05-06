@@ -6,6 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using Xunit;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace MusicAtoutV1_FAU_Baptiste.Models
 {
@@ -351,5 +354,133 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return vretour;
         }
 
+    }
+
+
+    // ----------------
+    // Section Tests
+    // ----------------
+
+    public static class MessageBoxMock
+    {
+        public static string LastMessage { get; private set; }
+
+        public static void Show(string message)
+        {
+            LastMessage = message;
+        }
+
+        public static void Clear() => LastMessage = "";
+    }
+
+    public class ModelProjetTests
+    {
+        private Sio2musicAtoutFauContext GetInMemoryContext()
+        {
+            var options = new DbContextOptionsBuilder<Sio2musicAtoutFauContext>()
+                .UseInMemoryDatabase(databaseName: "TestDb_" + System.Guid.NewGuid()) // unique db per test
+                .Options;
+
+            return new Sio2musicAtoutFauContext(options);
+        }
+
+        public ModelProjetTests()
+        {
+            // Création d'un contexte en mémoire à chaque test
+            var context = GetInMemoryContext();
+            ModelProjet.MonModel = context;
+        }
+
+        [Fact]
+        public void ListeVille_ReturnsEmptyList_WhenNoData()
+        {
+            var result = ModelProjet.listeVille();
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void AjoutCompositeur_ShouldAddNewCompositeur()
+        {
+            var result = ModelProjet.AjoutCompositeur("Mozart", "Wolfgang", "Génie musical", 1756, 1791, 1, 1);
+            Assert.True(result);
+
+            var list = ModelProjet.listeCompositeur();
+            Assert.Single(list);
+            Assert.Equal("Mozart", list.First().NomCompositeur);
+        }
+
+        [Fact]
+        public void ModifCompositeur_ShouldUpdateCompositeur()
+        {
+            ModelProjet.AjoutCompositeur("Bach", "Jean", "", 1685, 1750, 1, 1);
+            var compo = ModelProjet.listeCompositeur().First();
+            ModelProjet.CompositeurChoisi = compo;
+
+            var result = ModelProjet.ModifCompositeur("Bach", "Jean-Sébastien", "Très connu", 1685, 1750, 1, 1);
+            Assert.True(result);
+
+            var updated = ModelProjet.listeCompositeur().First();
+            Assert.Equal("Jean-Sébastien", updated.PrenomCompositeur);
+        }
+
+        [Fact]
+        public void SuppCompositeur_ShouldRemoveCompositeur()
+        {
+            ModelProjet.AjoutCompositeur("Beethoven", "Ludwig", "", 1770, 1827, 1, 1);
+            ModelProjet.CompositeurChoisi = ModelProjet.listeCompositeur().First();
+
+            var result = ModelProjet.SuppCompositeur();
+            Assert.True(result);
+
+            Assert.Empty(ModelProjet.listeCompositeur());
+        }
+
+        [Fact]
+        public void MotDePasseValide_ShouldReturnTrue_WhenStrong()
+        {
+            var result = ModelProjet.MotDePasseValide("Secure123!");
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void MotDePasseValide_ShouldReturnFalse_WhenTooWeak()
+        {
+            var result = ModelProjet.MotDePasseValide("123");
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void AjouterUtilisateur_ShouldAddUser_WhenValid()
+        {
+            ModelProjet.UtilisateurConnecte = new Utilisateur { Droits = 3 };
+            var result = ModelProjet.AjouterUtilisateur("admin", 2, "Admin123!");
+
+            Assert.True(result);
+
+            var user = ModelProjet.listeUtilisateur().FirstOrDefault();
+            Assert.NotNull(user);
+            Assert.Equal("admin", user.IdUtilisateur);
+        }
+
+        [Fact]
+        public void AjouterUtilisateur_ShouldFail_WhenPasswordInvalid()
+        {
+            ModelProjet.UtilisateurConnecte = new Utilisateur { Droits = 3 };
+            var result = ModelProjet.AjouterUtilisateur("baduser", 2, "123");
+
+            Assert.False(result);
+            Assert.Empty(ModelProjet.listeUtilisateur());
+        }
+
+        [Fact]
+        public void AjouterUtilisateur_ShouldFail_WhenUserAlreadyExists()
+        {
+            ModelProjet.UtilisateurConnecte = new Utilisateur { Droits = 3 };
+            ModelProjet.AjouterUtilisateur("user1", 2, "Password1!");
+            var result = ModelProjet.AjouterUtilisateur("user1", 2, "Password1!");
+
+            Assert.False(result);
+            Assert.Single(ModelProjet.listeUtilisateur());
+        }
     }
 }
