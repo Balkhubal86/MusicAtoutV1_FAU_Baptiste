@@ -136,7 +136,9 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             }
             return vretour;
         }
-
+        // ---------------------
+        // Section Mot de Passe 
+        // ---------------------
         private static string GetMd5Hash(string PasswdSaisi)
         {
             byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(PasswdSaisi);
@@ -149,7 +151,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return sb.ToString();
         }
 
-        // Section Mot de Passe 
+        
         public static bool validConnexion(string id, string mp)
         {
             string message = "";
@@ -220,15 +222,15 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             string hashAncien = GetMd5Hash(ancien);
             string hashNouveau = GetMd5Hash(nouveau);
 
-            if (nouveau != confirmation)
+            if (nouveau != confirmation) // Vérifie si le mot de passe de confirmation est identique au nouveau mot de passe
             {
                 message = "Les mots de passe ne correspondent pas.";
             }
-            else if (utilisateurConnecte.Passwd.Substring(2) != "0x" + hashAncien)
+            else if (!utilisateurConnecte.Passwd.Substring(2).Equals("0x"+ hashAncien)) // Vérifie si l'ancien mot de passe est correct
             {
                 message = "Ancien mot de passe incorrect.";
             }
-            else if (!MotDePasseValide(nouveau))
+            else if (!MotDePasseValide(nouveau)) // Vérifie si le nouveau mot de passe respecte les règles
             {
                 message = "Le mot de passe ne respecte pas les règles.";
             }
@@ -263,9 +265,9 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return estValide;
         }
 
-        //
-
+        // ---------------------
         // Gestion Utilisateurs
+        // ---------------------
         public static void ReactiverUtilisateur(Utilisateur uChoisi)
         {
             if (UtilisateurConnecte.Droits >= 2 && UtilisateurConnecte.Droits >= uChoisi.Droits)
