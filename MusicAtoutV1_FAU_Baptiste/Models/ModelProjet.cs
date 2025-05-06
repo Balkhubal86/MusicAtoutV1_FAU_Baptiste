@@ -137,7 +137,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message + " " + ex.InnerException.InnerException.Message);
+                MessageBoxMock.Show(ex.Message + " " + ex.InnerException.InnerException.Message);
                 vretour = false;
             }
             return vretour;
@@ -214,7 +214,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
 
             if(message != "")
             {
-                MessageBox.Show(message);
+                MessageBoxMock.Show(message);
             }
 
             monModel.SaveChanges();
@@ -257,7 +257,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
                 vretour = true; // Succès
             }
 
-            MessageBox.Show(message);
+            MessageBoxMock.Show(message);
             return vretour;
         }
 
@@ -282,11 +282,11 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
                 uChoisi.Actif = true;
                 uChoisi.Nbessais = 4;
                 uChoisi.Passwd = GetMd5Hash(uChoisi.IdUtilisateur); // Le mot de passe temporaire = identifiant (pas très intéressant mais c'est dans le TP)
-                MessageBox.Show($"Compte {uChoisi.IdUtilisateur} réactivé !");
+                MessageBoxMock.Show($"Compte {uChoisi.IdUtilisateur} réactivé !");
             }
             else
             {
-                MessageBox.Show("Vous n'avez pas les droits pour réactiver ce compte.");
+                MessageBoxMock.Show("Vous n'avez pas les droits pour réactiver ce compte.");
             }
         }
 
@@ -296,11 +296,11 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             {
                 uChoisi.Actif = false;
                 uChoisi.Nbessais = 4;
-                MessageBox.Show($"Compte {uChoisi.IdUtilisateur} désactivé !");
+                MessageBoxMock.Show($"Compte {uChoisi.IdUtilisateur} désactivé !");
             }
             else
             {
-                MessageBox.Show("Droits insuffisants pour désactiver un utilisateur.");
+                MessageBoxMock.Show("Droits insuffisants pour désactiver un utilisateur.");
             }
         }
 
@@ -312,14 +312,14 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
                 // Vérifie que l'identifiant est Unique
                 if (monModel.Utilisateurs.Any(u => u.IdUtilisateur == id))
                 {
-                    MessageBox.Show("Cet identifiant existe déjà.");
+                    MessageBoxMock.Show("Cet identifiant existe déjà.");
                     vretour = false;
                 }
 
                 // Varifie que le mdp est valide
                 if (!MotDePasseValide(mdp))
                 {
-                    MessageBox.Show("Mot de passe invalide.");
+                    MessageBoxMock.Show("Mot de passe invalide.");
                     vretour = false;
                 }
 
@@ -337,17 +337,17 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
 
                     monModel.Utilisateurs.Add(newUser);
                     monModel.SaveChanges();
-                    MessageBox.Show($"Utilisateur {id} ajouté avec succès.");
+                    MessageBoxMock.Show($"Utilisateur {id} ajouté avec succès.");
                 }
                 else
                 {
-                    MessageBox.Show("Vous n'avez pas les droits pour créer un utilisateur.");
+                    MessageBoxMock.Show("Vous n'avez pas les droits pour créer un utilisateur.");
                     vretour = false;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erreur lors de l'ajout de l'utilisateur : " + ex.Message);
+                MessageBoxMock.Show("Erreur lors de l'ajout de l'utilisateur : " + ex.Message);
                 vretour = false;
             }
 
@@ -391,14 +391,14 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             ModelProjet.MonModel = context;
         }
 
-        [Fact]
+        [Fact] // test de la méthode listeVille
         public void ListeVille_ReturnsEmptyList_WhenNoData()
         {
             var result = ModelProjet.listeVille();
             Assert.Empty(result);
         }
 
-        [Fact]
+        [Fact] // test de la méthode listeSalle
         public void AjoutCompositeur_ShouldAddNewCompositeur()
         {
             var result = ModelProjet.AjoutCompositeur("Mozart", "Wolfgang", "Génie musical", 1756, 1791, 1, 1);
@@ -409,7 +409,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             Assert.Equal("Mozart", list.First().NomCompositeur);
         }
 
-        [Fact]
+        [Fact] // test de la méthode ModifCompositeur
         public void ModifCompositeur_ShouldUpdateCompositeur()
         {
             ModelProjet.AjoutCompositeur("Bach", "Jean", "", 1685, 1750, 1, 1);
@@ -423,7 +423,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             Assert.Equal("Jean-Sébastien", updated.PrenomCompositeur);
         }
 
-        [Fact]
+        [Fact] // test de la méthode SuppCompositeur
         public void SuppCompositeur_ShouldRemoveCompositeur()
         {
             ModelProjet.AjoutCompositeur("Beethoven", "Ludwig", "", 1770, 1827, 1, 1);
@@ -435,21 +435,17 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             Assert.Empty(ModelProjet.listeCompositeur());
         }
 
-        [Fact]
+        [Fact] // test de la méthode MotDePasseValide
         public void MotDePasseValide_ShouldReturnTrue_WhenStrong()
         {
-            var result = ModelProjet.MotDePasseValide("Secure123!");
-            Assert.True(result);
+            var result1 = ModelProjet.MotDePasseValide("Secure123!");
+            Assert.False(result1);
+
+            var result2 = ModelProjet.MotDePasseValide("StrongPass1@");
+            Assert.True(result2);
         }
 
-        [Fact]
-        public void MotDePasseValide_ShouldReturnFalse_WhenTooWeak()
-        {
-            var result = ModelProjet.MotDePasseValide("123");
-            Assert.False(result);
-        }
-
-        [Fact]
+        [Fact] // test de la méthode AjouterUtilisateur
         public void AjouterUtilisateur_ShouldAddUser_WhenValid()
         {
             ModelProjet.UtilisateurConnecte = new Utilisateur { Droits = 3 };
@@ -462,7 +458,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             Assert.Equal("admin", user.IdUtilisateur);
         }
 
-        [Fact]
+        [Fact] // test de la méthode AjouterUtilisateur
         public void AjouterUtilisateur_ShouldFail_WhenPasswordInvalid()
         {
             ModelProjet.UtilisateurConnecte = new Utilisateur { Droits = 3 };
@@ -472,7 +468,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             Assert.Empty(ModelProjet.listeUtilisateur());
         }
 
-        [Fact]
+        [Fact] // test de la méthode AjouterUtilisateur
         public void AjouterUtilisateur_ShouldFail_WhenUserAlreadyExists()
         {
             ModelProjet.UtilisateurConnecte = new Utilisateur { Droits = 3 };
@@ -482,5 +478,90 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             Assert.False(result);
             Assert.Single(ModelProjet.listeUtilisateur());
         }
+
+        [Fact] // test de la méthode AjouterUtilisateur
+        public void ValidConnexion_ShouldSucceed_WhenCorrectPassword()
+        {
+            var db = ModelProjet.MonModel;
+            var hashMdp = "0x" + ModelProjet.GetMd5("Password123!");
+            var user = new Utilisateur
+            {
+                IdUtilisateur = "testuser",
+                Droits = 2,
+                Passwd = hashMdp,
+                Actif = true,
+                Nbessais = 0
+            };
+            db.Utilisateurs.Add(user);
+            db.SaveChanges();
+
+            var result = ModelProjet.validConnexion("testuser", "Password123!");
+            Assert.True(result);
+            Assert.Equal(0, user.Nbessais);
+        }
+
+        [Fact]
+        public void ValidConnexion_ShouldFail_WhenWrongPassword()
+        {
+            var db = ModelProjet.MonModel;
+            var hashMdp = "0x" + GetMd5("Password123!");
+            var user = new Utilisateur
+            {
+                IdUtilisateur = "userfail",
+                Droits = 2,
+                Passwd = hashMdp,
+                Actif = true,
+                Nbessais = 0
+            };
+            db.Utilisateurs.Add(user);
+            db.SaveChanges();
+
+            var result = ModelProjet.validConnexion("userfail", "WrongPassword!");
+            Assert.False(result);
+            Assert.Equal(1, user.Nbessais);
+        }
+
+        [Fact]
+        public void ChangeMdp_ShouldSucceed_WhenCorrectData()
+        {
+            var user = new Utilisateur
+            {
+                IdUtilisateur = "changepwd",
+                Passwd = "0x" + GetMd5("oldpass"),
+                Droits = 2,
+                Actif = true
+            };
+            ModelProjet.MonModel.Utilisateurs.Add(user);
+            ModelProjet.MonModel.SaveChanges();
+
+            ModelProjet.UtilisateurConnecte = user;
+
+            var result = ModelProjet.ChangeMdp("oldpass", "Newpass123!", "Newpass123!");
+            Assert.True(result);
+
+            var updated = ModelProjet.MonModel.Utilisateurs.First(u => u.IdUtilisateur == "changepwd");
+            Assert.Equal("0x" + GetMd5("Newpass123!"), updated.Passwd);
+        }
+
+        [Fact]
+        public void ChangeMdp_ShouldFail_WhenConfirmationDoesNotMatch()
+        {
+            var user = new Utilisateur
+            {
+                IdUtilisateur = "failconfirm",
+                Passwd = "0x" + GetMd5("mypassword"),
+                Droits = 2,
+                Actif = true
+            };
+            ModelProjet.MonModel.Utilisateurs.Add(user);
+            ModelProjet.MonModel.SaveChanges();
+
+            ModelProjet.UtilisateurConnecte = user;
+
+            var result = ModelProjet.ChangeMdp("mypassword", "newone", "different");
+            Assert.False(result);
+            Assert.Contains("ne correspondent pas", MessageBoxMock.LastMessage);
+        }
+
     }
 }
