@@ -41,8 +41,6 @@
             oeuvresToolStripMenuItem = new ToolStripMenuItem();
             utilisateursToolStripMenuItem = new ToolStripMenuItem();
             gestionToolStripMenuItem = new ToolStripMenuItem();
-            ajouterToolStripMenuItem = new ToolStripMenuItem();
-            supprimerToolStripMenuItem = new ToolStripMenuItem();
             changementMdpToolStripMenuItem = new ToolStripMenuItem();
             pictureBox1 = new PictureBox();
             btn_deco = new Button();
@@ -124,7 +122,7 @@
             // 
             // utilisateursToolStripMenuItem
             // 
-            utilisateursToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gestionToolStripMenuItem, ajouterToolStripMenuItem, supprimerToolStripMenuItem, changementMdpToolStripMenuItem });
+            utilisateursToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gestionToolStripMenuItem, changementMdpToolStripMenuItem });
             utilisateursToolStripMenuItem.Name = "utilisateursToolStripMenuItem";
             utilisateursToolStripMenuItem.Size = new Size(77, 20);
             utilisateursToolStripMenuItem.Text = "Utilisateurs";
@@ -135,18 +133,6 @@
             gestionToolStripMenuItem.Size = new Size(180, 22);
             gestionToolStripMenuItem.Text = "Gestion";
             gestionToolStripMenuItem.Click += gestionToolStripMenuItem_Click_1;
-            // 
-            // ajouterToolStripMenuItem
-            // 
-            ajouterToolStripMenuItem.Name = "ajouterToolStripMenuItem";
-            ajouterToolStripMenuItem.Size = new Size(180, 22);
-            ajouterToolStripMenuItem.Text = "Ajouter";
-            // 
-            // supprimerToolStripMenuItem
-            // 
-            supprimerToolStripMenuItem.Name = "supprimerToolStripMenuItem";
-            supprimerToolStripMenuItem.Size = new Size(180, 22);
-            supprimerToolStripMenuItem.Text = "Supprimer";
             // 
             // changementMdpToolStripMenuItem
             // 
@@ -210,8 +196,6 @@
         private ToolStripMenuItem oeuvresToolStripMenuItem;
         private ToolStripMenuItem utilisateursToolStripMenuItem;
         private ToolStripMenuItem gestionToolStripMenuItem;
-        private ToolStripMenuItem ajouterToolStripMenuItem;
-        private ToolStripMenuItem supprimerToolStripMenuItem;
         private Button btn_deco;
         private ToolStripMenuItem changementMdpToolStripMenuItem;
     }
