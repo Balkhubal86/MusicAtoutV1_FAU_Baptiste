@@ -15,6 +15,7 @@ namespace MusicAtoutV1_FAU_Baptiste
             ApplicationConfiguration.Initialize();
             ModelProjet.init();
             Application.Run(new FConnexion());
+
         }
     }
 }
