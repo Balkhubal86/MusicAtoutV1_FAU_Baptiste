@@ -82,6 +82,7 @@
             tbMdp.Name = "tbMdp";
             tbMdp.Size = new Size(144, 23);
             tbMdp.TabIndex = 4;
+            tbMdp.UseSystemPasswordChar = true;
             // 
             // tbConfMdp
             // 
@@ -89,6 +90,7 @@
             tbConfMdp.Name = "tbConfMdp";
             tbConfMdp.Size = new Size(144, 23);
             tbConfMdp.TabIndex = 5;
+            tbConfMdp.UseSystemPasswordChar = true;
             // 
             // label1
             // 

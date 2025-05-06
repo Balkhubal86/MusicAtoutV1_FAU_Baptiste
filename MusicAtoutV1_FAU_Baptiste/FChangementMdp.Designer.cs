@@ -44,6 +44,7 @@
             tbAncienMdp.Name = "tbAncienMdp";
             tbAncienMdp.Size = new Size(129, 23);
             tbAncienMdp.TabIndex = 0;
+            tbAncienMdp.UseSystemPasswordChar = true;
             // 
             // tbNouveauMdp
             // 
@@ -51,6 +52,7 @@
             tbNouveauMdp.Name = "tbNouveauMdp";
             tbNouveauMdp.Size = new Size(129, 23);
             tbNouveauMdp.TabIndex = 1;
+            tbNouveauMdp.UseSystemPasswordChar = true;
             // 
             // tbConfirmMdp
             // 
@@ -58,6 +60,7 @@
             tbConfirmMdp.Name = "tbConfirmMdp";
             tbConfirmMdp.Size = new Size(129, 23);
             tbConfirmMdp.TabIndex = 2;
+            tbConfirmMdp.UseSystemPasswordChar = true;
             // 
             // label1
             // 

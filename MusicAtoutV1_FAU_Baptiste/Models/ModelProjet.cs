@@ -78,6 +78,9 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return vretour;
         }
 
+        // ----------------------------
+        // Section Compositeur
+        // ----------------------------
         public static bool ModifCompositeur(string nom, string prenom, string remarque, int? anNais, int? anMort, int idNation, int idStyle)
         {
             bool vretour = true;
@@ -149,12 +152,13 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return sb.ToString();
         }
 
+        // ----------------------------
         // Section Mot de Passe 
+        // ----------------------------
         public static bool validConnexion(string id, string mp)
         {
             string message = "";
-            // Ecrire le code qui renvoie le message à afficher et mets à jour les variables utilisateurConnecte et connexionValide,
-            // la comparaison des mots de passes se fera via utilisateurConnecte.passwd.Substring(2).Equals(GetMd5Hash(mp))
+
             if(monModel.Utilisateurs.Where(x => x.IdUtilisateur == id).ToList().Count == 1)
             {
                 utilisateurConnecte = monModel.Utilisateurs.Where(x => x.IdUtilisateur == id).ToList()[0];
@@ -216,63 +220,65 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
 
         public static bool ChangeMdp(string ancien, string nouveau, string confirmation)
         {
+            bool vretour = false;
             string message = "";
             string hashAncien = GetMd5Hash(ancien);
             string hashNouveau = GetMd5Hash(nouveau);
 
-            if (nouveau != confirmation)
+            if (nouveau != confirmation) // Les deux mots de passe ne correspondent pas
             {
                 message = "Les mots de passe ne correspondent pas.";
             }
-            else if (utilisateurConnecte.Passwd.Substring(2) != "0x" + hashAncien)
+            else if (utilisateurConnecte.Passwd.Substring(2) != hashAncien) // Ancien mot de passe incorrect
             {
                 message = "Ancien mot de passe incorrect.";
             }
-            else if (!MotDePasseValide(nouveau))
+            else if (!MotDePasseValide(nouveau)) // Le nouveau mot de passe ne respecte pas les règles
             {
                 message = "Le mot de passe ne respecte pas les règles.";
             }
             else
             {
-                utilisateurConnecte.Passwd = hashNouveau;
+                utilisateurConnecte.Passwd = "0x" + hashNouveau;
 
                 using (var db = new Sio2musicAtoutFauContext())
                 {
                     var user = db.Utilisateurs.FirstOrDefault(u => u.IdUtilisateur == utilisateurConnecte.IdUtilisateur);
                     if (user != null)
                     {
-                        user.Passwd = "0x" + hashNouveau;
+                        user.Passwd = utilisateurConnecte.Passwd;
                         db.SaveChanges();
                     }
                 }
 
-                return true; // Succès
+                vretour = true; // Succès
             }
 
             MessageBox.Show(message);
-            return false;
+            return vretour;
         }
 
-        public static bool MotDePasseValide(string mdp)
+        public static bool MotDePasseValide(string mdp) 
         {
-            string special = @"()[]{}@ !$,;:/";
-            bool estValide = mdp.Length >= 8
-                             && mdp.Any(char.IsDigit)
-                             && mdp.Any(c => special.Contains(c));
+            string special = @"()[]{}@ !$,;:/";                     // Caractères spéciaux autorisés
+
+            bool estValide = mdp.Length >= 8                        // Longueur minimale (8)
+                             && mdp.Any(char.IsDigit)               // Au moins un chiffre
+                             && mdp.Any(c => special.Contains(c));  // Au moins un caractère spécial
 
             return estValide;
         }
 
-        //
-
-        // Gestion Utilisateurs
+        // ----------------------------
+        // Section Utilisateurs
+        // ----------------------------
         public static void ReactiverUtilisateur(Utilisateur uChoisi)
         {
             if (UtilisateurConnecte.Droits >= 2 && UtilisateurConnecte.Droits >= uChoisi.Droits)
             {
                 uChoisi.Actif = true;
                 uChoisi.Nbessais = 4;
-                uChoisi.Passwd = GetMd5Hash(uChoisi.IdUtilisateur); // Le mot de passe temporaire = identifiant
+                uChoisi.Passwd = GetMd5Hash(uChoisi.IdUtilisateur); // Le mot de passe temporaire = identifiant (pas très intéressant mais c'est dans le TP)
                 MessageBox.Show($"Compte {uChoisi.IdUtilisateur} réactivé !");
             }
             else
@@ -300,7 +306,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             bool vretour = true;
             try
             {
-                // Vérifie que l'identifiant est unique
+                // Vérifie que l'identifiant est Unique
                 if (monModel.Utilisateurs.Any(u => u.IdUtilisateur == id))
                 {
                     MessageBox.Show("Cet identifiant existe déjà.");
@@ -314,7 +320,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
                     vretour = false;
                 }
 
-                //
+                // Si l'utilisateur connecté a les droits suffisants et qu'il a passé la vérification
                 if (UtilisateurConnecte.Droits == 3 && vretour)
                 {
                     Utilisateur newUser = new Utilisateur

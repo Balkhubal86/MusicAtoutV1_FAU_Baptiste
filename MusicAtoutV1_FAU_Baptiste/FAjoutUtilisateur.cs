@@ -32,7 +32,10 @@ namespace MusicAtoutV1_FAU_Baptiste
 
             if (mdp == confirmeMdp)
             {
-                ModelProjet.AjouterUtilisateur(id, droit, mdp);
+                if(ModelProjet.AjouterUtilisateur(id, droit, mdp))
+                {
+                    this.Close();
+                }
             }
         }
     }
