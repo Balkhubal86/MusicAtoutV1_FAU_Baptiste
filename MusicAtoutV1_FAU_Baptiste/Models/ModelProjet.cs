@@ -143,7 +143,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             return vretour;
         }
 
-        private static string GetMd5Hash(string PasswdSaisi)
+        public static string GetMd5Hash(string PasswdSaisi)
         {
             byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(PasswdSaisi);
             byte[] hash = (MD5.Create()).ComputeHash(inputBytes);
@@ -483,7 +483,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
         public void ValidConnexion_ShouldSucceed_WhenCorrectPassword()
         {
             var db = ModelProjet.MonModel;
-            var hashMdp = "0x" + ModelProjet.GetMd5("Password123!");
+            var hashMdp = "0x" + ModelProjet.GetMd5Hash("Password123!");
             var user = new Utilisateur
             {
                 IdUtilisateur = "testuser",
@@ -504,7 +504,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
         public void ValidConnexion_ShouldFail_WhenWrongPassword()
         {
             var db = ModelProjet.MonModel;
-            var hashMdp = "0x" + GetMd5("Password123!");
+            var hashMdp = "0x" + ModelProjet.GetMd5Hash("Password123!");
             var user = new Utilisateur
             {
                 IdUtilisateur = "userfail",
@@ -527,7 +527,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             var user = new Utilisateur
             {
                 IdUtilisateur = "changepwd",
-                Passwd = "0x" + GetMd5("oldpass"),
+                Passwd = "0x" + ModelProjet.GetMd5Hash("oldpass"),
                 Droits = 2,
                 Actif = true
             };
@@ -540,7 +540,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             Assert.True(result);
 
             var updated = ModelProjet.MonModel.Utilisateurs.First(u => u.IdUtilisateur == "changepwd");
-            Assert.Equal("0x" + GetMd5("Newpass123!"), updated.Passwd);
+            Assert.Equal("0x" + ModelProjet.GetMd5Hash("Newpass123!"), updated.Passwd);
         }
 
         [Fact]
@@ -549,7 +549,7 @@ namespace MusicAtoutV1_FAU_Baptiste.Models
             var user = new Utilisateur
             {
                 IdUtilisateur = "failconfirm",
-                Passwd = "0x" + GetMd5("mypassword"),
+                Passwd = "0x" + ModelProjet.GetMd5Hash("mypassword"),
                 Droits = 2,
                 Actif = true
             };
